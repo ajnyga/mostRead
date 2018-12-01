@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE locale SYSTEM "../../../../../lib/pkp/dtd/locale.dtd">
+
+<!--
+  * locale.xml
+  *
+  * Copyright (c) 2014-2018 Simon Fraser University
+  * Copyright (c) 2003-2018 John Willinsky
+  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+  * Localization information: https://pkp.sfu.ca/wiki/index.php?title=Translating_OxS
+  * Localization strings.
+  -->
+
+<locale name="fr_CA" full_name="Français (Canada)">
+	<message key="plugins.block.mostRead.displayName">
+Bloc &laquo;Le plus lu&raquo;</message>
+	<message key="plugins.block.mostRead.description">Ce plugin montre la plupart des objets lus dans la barre latérale
+</message>
+  <message key="plugins.block.mostRead.blockTitle">Articles les plus lus la semaine dernière</message>
+</locale>
