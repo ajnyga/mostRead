@@ -15,5 +15,8 @@
 <locale name="fi_FI" full_name="Suomi">
 	<message key="plugins.block.mostRead.displayName">Luetuimmat artikkelit -lohko</message>
 	<message key="plugins.block.mostRead.description">Tämä lohkolisäosa näyttää sivupalkissa luetuimmat artikkelit.</message>
-  <message key="plugins.block.mostRead.blockTitle">Viikon luetuimmat</message>  
+  <message key="plugins.block.mostRead.blockTitle">Luetuimmat</message>
+  <message key="plugins.blocks.mostRead.settings.title">Luetuimmat artikkelit -lohkon asetukset</message>
+  <message key="plugins.blocks.mostRead.settings.days">Monenko päivän ajalta haluat näyttää luetuimmat artikkelit. Esimerkiksi arvo '7' näyttää luetuimmat viikon ajalta.</message>
+  <message key="plugins.blocks.mostRead.settings.blockTitle">Lohkon otsikko</message>
 </locale>

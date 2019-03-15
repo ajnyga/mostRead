@@ -1,15 +1,15 @@
 {**
  * plugins/blocks/mostRead/block.tpl
  *
- * Copyright (c) 2014-2018 Simon Fraser University
- * Copyright (c) 2003-2018 John Willinsky
+ * Copyright (c) 2014-2019 Simon Fraser University
+ * Copyright (c) 2003-2019 John Willinsky
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
  * "Most Read" block.
  *}
-<div class="pkp_block block_developed_by">
+<div class="pkp_block block_most_read">
 	<div class="content">
-		<span class="title">{translate|escape key="plugins.block.mostRead.blockTitle"}</span>
+		<span class="title">{$blockTitle}</span>
 			<ul class="most_read">
 			{foreach from=$resultMetrics item=article}
 				<li class="most_read_article">

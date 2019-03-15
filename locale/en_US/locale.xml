@@ -14,5 +14,8 @@
 <locale name="en_US" full_name="U.S. English">
 	<message key="plugins.block.mostRead.displayName">"Most Read" Block</message>
 	<message key="plugins.block.mostRead.description">This plugin shows most read objects in the sidebar.</message>
-  <message key="plugins.block.mostRead.blockTitle">Most read last week</message>
+  <message key="plugins.block.mostRead.blockTitle">Most read</message>
+  <message key="plugins.blocks.mostRead.settings.title">Most read block settings</message>
+  <message key="plugins.blocks.mostRead.settings.days">Enter the number of days you wish to be included in the statistics. For example '7' will show the statistics from the last week.</message>
+  <message key="plugins.blocks.mostRead.settings.blockTitle">Block title</message>
 </locale>
