@@ -13,8 +13,8 @@
 
 <locale name="fr_CA" full_name="Français (Canada)">
 	<message key="plugins.block.mostRead.displayName">
-Bloc &laquo;Le plus lu&raquo;</message>
+Bloc Le plus lu</message>
 	<message key="plugins.block.mostRead.description">Ce plugin montre la plupart des objets lus dans la barre latérale
 </message>
-  <message key="plugins.block.mostRead.blockTitle">Articles les plus lus</message>
+  <message key="plugins.block.mostRead.blockTitle">Articles les plus lu</message>
 </locale>
