@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE locale SYSTEM "../../../../../lib/pkp/dtd/locale.dtd">
+
+<!--
+  * locale.xml
+  *
+  * Copyright (c) 2014-2019 Simon Fraser University
+  * Copyright (c) 2003-2019 John Willinsky
+  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+  * Localization information: https://pkp.sfu.ca/wiki/index.php?title=Translating_OxS
+  * Localization strings.
+  -->
+
+<locale name="pt_BR" full_name="Português (Brasil)">
+    <message key="plugins.block.mostRead.displayName">Bloco "Mais lidas"</message>
+    <message key="plugins.block.mostRead.description">Este plugin mostra os objetos mais lidos na barra lateral.</message>
+    <message key="plugins.block.mostRead.blockTitle">Mais lidos da última semana</message>
+</locale>
