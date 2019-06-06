@@ -14,5 +14,5 @@
 <locale name="pt_BR" full_name="Português (Brasil)">
     <message key="plugins.block.mostRead.displayName">Bloco "Mais lidas"</message>
     <message key="plugins.block.mostRead.description">Este plugin mostra os objetos mais lidos na barra lateral.</message>
-    <message key="plugins.block.mostRead.blockTitle">Mais lidos da última semana</message>
+    <message key="plugins.block.mostRead.blockTitle">Mais lidos</message>
 </locale>
