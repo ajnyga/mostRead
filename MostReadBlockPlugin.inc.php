@@ -68,10 +68,9 @@ class MostReadBlockPlugin extends BlockPlugin {
 
 		$defaulticon = getBaseUrl() . "/" . $this->getPluginPath() . "/imagens/icon.png";
 
-
+		$smarty->assign('defaulticon', $defaulticon);
 
 		$templateMgr->assign('resultMetrics', $resultMetrics);
-		$templateMgr->assign('defaulticon', $defaulticon);
 
 		return parent::getContents($templateMgr, $request);
 	}
