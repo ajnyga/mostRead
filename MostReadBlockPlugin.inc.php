@@ -66,7 +66,13 @@ class MostReadBlockPlugin extends BlockPlugin {
 			$cache->flush();
 		}
 
+		$defaulticon = getBaseUrl() . "/" . $this->getPluginPath() . "/imagens/icon.png";
+
+
+
 		$templateMgr->assign('resultMetrics', $resultMetrics);
+		$templateMgr->assign('defaulticon', $defaulticon);
+
 		return parent::getContents($templateMgr, $request);
 	}
 
@@ -100,16 +106,6 @@ class MostReadBlockPlugin extends BlockPlugin {
 			$cache->setEntireCache($articles);
 			return $result;
 	}
-
-	public function imagens($hookName, $args){
-		$smarty = $args[0];
-		$template = $args[1];
-
-		$defaulticon = getBaseUrl() . "/" . $this->getPluginPath() . "/imagens/icon.png";
-
-		$smarty->assign('defaulticon', $defaulticon);
-	}
-
 }
 
 ?>
