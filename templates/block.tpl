@@ -14,7 +14,7 @@
 			{foreach from=$resultMetrics item=article}
 				<li class="most_read_article">
 					<div class="most_read_article_title"><a href="{url journal=$article.journalPath page="article" op="view" path=$article.articleId}">{$article.articleTitle}{if !empty($article.articleSubTitle)} {$article.articleSubTitle}{/if}</a></div>
-					<div class="most_read_article_journal">{$defaulticon}</span> {$article.metric}</div>
+					<div class="most_read_article_journal">{$defaulticon}{$article.metric}</div>
 				</li>
 			{/foreach}
 			</ul>
