@@ -102,12 +102,12 @@ class MostReadBlockPlugin extends BlockPlugin {
 	}
 
 	public function imagens($hookName, $args){
-		$plugin = $this->getPlugin();
-		$context = $this->getContext();
+		$smarty = $args[0];
+		$template = $args[1];
 
-		$defaulticon = 'small_toolbox' => 'imagens/icon.png';
+		$defaulticon = "/" . $this->getPluginPath() . "/imagens/icon.png";
 
-		$templateMgr->assign('defaulticon', $defaulticon)
+		$smarty->assign('defaulticon', $defaulticon);
 	}
 
 }
