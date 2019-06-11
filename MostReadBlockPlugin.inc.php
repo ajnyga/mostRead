@@ -68,11 +68,8 @@ class MostReadBlockPlugin extends BlockPlugin {
 
 		$templateMgr->assign('resultMetrics', $resultMetrics);
 
-	
-
 		return parent::getContents($templateMgr, $request);
 	}
-
 
 	function _cacheMiss($cache) {
 			$metricsDao = DAORegistry::getDAO('MetricsDAO');
@@ -102,6 +99,15 @@ class MostReadBlockPlugin extends BlockPlugin {
 			$result->Close();			
 			$cache->setEntireCache($articles);
 			return $result;
+	}
+
+	function imagens($hookName, $args){
+		$smarty = $args[0];
+		$template = $args[1];
+
+		$defaultIcon = "/" . $this->getPluginPath() . "/imagens/icon.png";
+
+		$smarty->assign('defaultIcon', $defaultIcon);
 	}
 }
 
