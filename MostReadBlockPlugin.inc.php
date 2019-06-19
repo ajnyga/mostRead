@@ -101,7 +101,6 @@ class MostReadBlockPlugin extends BlockPlugin {
 			return $result;
 	}
 
-
 	function imagem($templateMgr, $request = null) {
 		$context = $request->getContext();
 
@@ -109,7 +108,7 @@ class MostReadBlockPlugin extends BlockPlugin {
 
 		$templateMgr->assign('defaulicon', $defaulicon);
 
-		return parent::getContents($templateMgr, $request);
+		return parent::imagem($templateMgr, $request);
 		
 	}
 }
