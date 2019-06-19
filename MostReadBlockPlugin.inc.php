@@ -105,9 +105,16 @@ class MostReadBlockPlugin extends BlockPlugin {
 		$plugin = $this->getPlugin();
 		$context = $this->getContext();
 
+		$templateMgr = TemplateManager::getManager($request);
+		$templateMgr->assign('pluginName', $plugin->getName());
+		$templateMgr->assign('pluginBaseUrl', $request->getBaseUrl() . '/' . $plugin->getPluginPath());
+
+
 		$displayimg = 'defaulticon' => 'imagens/icon.png';
 
 		$templateMgr->assign('displayimg', $displayimg);
+
+		
 		
 	}
 }
