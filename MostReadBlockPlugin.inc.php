@@ -101,8 +101,7 @@ class MostReadBlockPlugin extends BlockPlugin {
 			return $result;
 	}
 
-	function imagem($templateMgr, $request = null) {
-		$context = $request->getContext();
+	function imagem() {
 
 		$defaulicon = "/" . $this->getPluginPath() . "/imagens/icon.png";
 
