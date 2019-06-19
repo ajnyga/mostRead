@@ -103,7 +103,7 @@ class MostReadBlockPlugin extends BlockPlugin {
 
 	function imagem() {
 
-		$defaulicon = "/" . $this->getPluginPath() . "/imagens/icon.png";
+		$defaulicon = __DIR__ . "/imagens/icon.png";
 
 		return $defaulicon;
 		
