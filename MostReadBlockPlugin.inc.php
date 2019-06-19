@@ -100,15 +100,6 @@ class MostReadBlockPlugin extends BlockPlugin {
 			$cache->setEntireCache($articles);
 			return $result;
 	}
-
-	function imagens($hookName, $args){
-		$smarty = $args[0];
-		$template = $args[1];
-
-		$defaultIcon = "/" . $this->getPluginPath() . "/imagens/icon.png";
-
-		$smarty->assign('defaultIcon', $defaultIcon);
-	}
 }
 
 ?>
