@@ -100,6 +100,15 @@ class MostReadBlockPlugin extends BlockPlugin {
 			$cache->setEntireCache($articles);
 			return $result;
 	}
+
+
+	function getContents($templateMgr, $request = null) {
+		$context = $request->getContext();
+
+		$defaulicon = "/" . $this->getPluginPath() . "/imagens/icon.png";
+
+		$smarty->assign('defaulicon', $defaulicon);
+	}
 }
 
 ?>
