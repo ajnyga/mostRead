@@ -101,11 +101,13 @@ class MostReadBlockPlugin extends BlockPlugin {
 			return $result;
 	}
 
-	function imagem() {
+	function imagem($request) {
+		$plugin = $this->getPlugin();
+		$context = $this->getContext();
 
-		$defaulicon = __DIR__ . "/imagens/icon.png";
+		$displayimg = 'defaulticon' => 'imagens/icon.png';
 
-		return $defaulicon;
+		$templateMgr->assign('displayimg', $displayimg);
 		
 	}
 }
