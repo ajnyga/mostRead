@@ -68,8 +68,6 @@ class MostReadBlockPlugin extends BlockPlugin {
 
 		$templateMgr->assign('resultMetrics', $resultMetrics);
 
-		$templateMgr->addImg('icon.png',$this->getJavaScriptURL($request).'icon.png');
-
 		return parent::getContents($templateMgr, $request);
 	}
 
@@ -106,7 +104,7 @@ class MostReadBlockPlugin extends BlockPlugin {
 
 	function imagem($request) {
 
-		$displayimg = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/imagens/';
+		$displayimg = $request->getBaseUrl() . '/' . $this->getPluginPath() . '/imagens/icon.png';
 
 	}
 
