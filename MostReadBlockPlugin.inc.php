@@ -101,21 +101,16 @@ class MostReadBlockPlugin extends BlockPlugin {
 			return $result;
 	}
 
+
 	function imagem($request) {
-		$plugin = $this->getPlugin();
-		$context = $this->getContext();
 
-		$templateMgr = TemplateManager::getManager($request);
-		$templateMgr->assign('pluginName', $plugin->getName());
-		$templateMgr->assign('pluginBaseUrl', $request->getBaseUrl() . '/' . $plugin->getPluginPath());
+		$displayimg = $request->getBaseUrl() . '/' . $this->getPluginPath() . 'imagens/icon.png'
 
-		$displayimg = "/" . $this->getPluginPath() . "imagens/icon.png";
-
-		$templateMgr->assign('displayimg', $displayimg);
-
-		return parent::imagem($templateMgr, $request);
-	
+		return $displayimg;
 	}
+
+
+
 }
 
 ?>
