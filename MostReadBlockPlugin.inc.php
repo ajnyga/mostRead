@@ -112,6 +112,8 @@ class MostReadBlockPlugin extends BlockPlugin {
 		$displayimg = "/" . $this->getPluginPath() . "imagens/icon.png";
 
 		$templateMgr->assign('displayimg', $displayimg);
+
+		return parent::imagem($templateMgr, $request);
 	
 	}
 }
