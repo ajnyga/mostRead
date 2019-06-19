@@ -106,7 +106,6 @@ class MostReadBlockPlugin extends BlockPlugin {
 
 		$displayimg = $request->getBaseUrl() . '/' . $this->getPluginPath() . 'imagens/icon.png'
 
-		return $displayimg;
 	}
 
 
