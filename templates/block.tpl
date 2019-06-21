@@ -20,7 +20,7 @@
 					</div>
 					<div class="most_read_article_journal">
 					<div class="most_read_article_journal"><span class="fa fa-search"></span> {$article.metric}</div>
-					<img src="{$baseUrl}/plugins/blocks/mosyRead/imagens/icon.png" alt="views" style="max-height: 60px;">{$article.metric}</div>
+					<img src="{$baseUrl}/plugins/blocks/mostRead/imagens/icon.png" alt="views" style="max-height: 60px;">{$article.metric}</div>
 				</li>
 			{/foreach}
 			</ul>
