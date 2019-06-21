@@ -19,8 +19,9 @@
 						</a>
 					</div>
 					<div class="most_read_article_journal">
-					<div class="most_read_article_journal"><span class="fa fa-search"></span> {$article.metric}</div>
-					<img src="{$baseUrl}/plugins/blocks/mostRead/imagens/icon.png" alt="views" style="max-height: 60px;">{$article.metric}</div>
+					<div class="most_read_article_journal">
+						<img src="{$baseUrl}/plugins/blocks/mostRead/imagens/icon.png" alt="views" style="max-height: 25px;">{$article.metric}
+					</div>
 				</li>
 			{/foreach}
 			</ul>
