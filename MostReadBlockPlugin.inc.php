@@ -67,9 +67,9 @@ class MostReadBlockPlugin extends BlockPlugin {
 		}
 
 		$templateMgr->assign('resultMetrics', $resultMetrics);
+
 		return parent::getContents($templateMgr, $request);
 	}
-
 
 	function _cacheMiss($cache) {
 			$metricsDao = DAORegistry::getDAO('MetricsDAO');
@@ -100,7 +100,6 @@ class MostReadBlockPlugin extends BlockPlugin {
 			$cache->setEntireCache($articles);
 			return $result;
 	}
-
 }
 
 ?>
