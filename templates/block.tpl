@@ -20,7 +20,7 @@
 					</div>
 					<div class="most_read_article_journal">
 					<div class="most_read_article_journal">
-						<img src="{$baseUrl}/plugins/blocks/mostRead/imagens/icon.png" alt="views" style="max-height: 25px;"><span>{$article.metric}</span>
+						<img src="{$baseUrl}/plugins/blocks/mostRead/imagens/icon.png" alt="views" style="max-height: 25px;"><b style="color: #0c0c0c;">{$article.metric}</b>
 					</div>
 				</li>
 			{/foreach}
