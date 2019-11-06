@@ -25,4 +25,4 @@ Upload the files to the server using the appropriate OJS module dedicated to ins
 
 License
 -------
-The plugin is developed by The Federation of Finnish Learned Societies and is released under [GNU General Public License v2] (http: // www. .gnu.org / licenses / gpl-2.0.html)
+The plugin is developed by The Federation of Finnish Learned Societies and is released under [GNU General Public License, version 2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
