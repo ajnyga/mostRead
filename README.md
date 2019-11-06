@@ -1,10 +1,10 @@
-Most Read Articles last week block plugin
+Most Read Articles block plugin
 ===========
 Plug-in for version 3.1.2+ of OJS.
 v. 1.0.0.1
 ------------
 
-Plugin for the creation of a “most read articles” section in the OJS frontend sidebar v. 3.
+Plugin for the creation of a “most read articles” section in the OJS3 frontend sidebar.
 
 Functionality
 -------------
@@ -21,7 +21,7 @@ None
 
 Installation
 -------------
-Upload the files to the server using the appropriate OJS module dedicated to installing the plugins (the plugin must be in compressed format .tar.gz)
+Upload the files to the server using the appropriate OJS module dedicated to installing the plugins (the plugin must be in compressed format .tar.gz).
 
 License
 -------
