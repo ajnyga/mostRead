@@ -1,0 +1,1 @@
+tar zcvf mostRead_OJS_3.2.tar.gz --exclude .git --exclude .vscode --exclude .DS_Store mostRead
