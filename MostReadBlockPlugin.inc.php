@@ -127,8 +127,6 @@ class MostReadBlockPlugin extends BlockPlugin {
 	 */
 	
 	function _cacheMiss($cache) {
-		$metricsDao = DAORegistry::getDAO('MetricsDAO');
-		
 		$submissionDao = DAORegistry::getDAO('SubmissionDAO'); /* @var $submissionDao SubmissionDAO */
 		
 		$journalDao = DAORegistry::getDAO('JournalDAO');
