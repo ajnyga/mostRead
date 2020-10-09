@@ -12,9 +12,9 @@
   -->
 
 <locale name="it_IT" full_name="Italiano">
-	<message key="plugins.block.mostRead.displayName">Blocco Più letti</message>
-	<message key="plugins.block.mostRead.description">Questo plugin mostra i contenuti più letti nella barra laterale di destra</message>
-	<message key="plugins.block.mostRead.blockTitle">Più letti</message>
+	<message key="plugins.blocks.mostRead.displayName">Blocco Più letti</message>
+	<message key="plugins.blocks.mostRead.description">Questo plugin mostra i contenuti più letti nella barra laterale di destra</message>
+	<message key="plugins.blocks.mostRead.blockTitle">Più letti</message>
 	<message key="plugins.blocks.mostRead.settings.title">Impostazioni del blocco Più letti</message>
 	<message key="plugins.blocks.mostRead.settings.days">Inserisci il numero di giorni da inserire nelle statistiche. Per esempio '7' mostrerà le statistiche dell'ultima settimana.</message>
 	<message key="plugins.blocks.mostRead.settings.blockTitle">Titolo del blocco</message>

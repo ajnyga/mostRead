@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE locale SYSTEM "../../../../../lib/pkp/dtd/locale.dtd">
+
+<!--
+  * locale.xml
+  *
+  * Copyright (c) 2014-2019 Simon Fraser University
+  * Copyright (c) 2003-2019 John Willinsky
+  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+  * Localization information: https://pkp.sfu.ca/wiki/index.php?title=Translating_OxS
+  * Localization strings.
+  -->
+
+<locale name="pl_PL" full_name="Polski">
+	<message key="plugins.blocks.mostRead.displayName">Blok "Najczęściej czytane"</message>
+	<message key="plugins.blocks.mostRead.description">Ten plugin pokazuje najczęściej czytane w bocznej kolumnie.</message>
+  <message key="plugins.blocks.mostRead.blockTitle">Najczęściej czytane w ostatnim tygodniu</message>
+
+  <message key="plugins.blocks.mostRead.settings.title">Ustawienia bloku "Najczęściej czytane"</message>
+  <message key="plugins.blocks.mostRead.settings.days">Ilość dni</message>
+  <message key="plugins.blocks.mostRead.settings.blockTitle">Tytuł bloku</message>
+  <message key="plugins.blocks.mostRead.settings.saved">Ustawienia plugin "Najczęściej czytane" zostały zapisane</message>
+</locale>

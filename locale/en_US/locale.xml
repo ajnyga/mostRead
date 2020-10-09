@@ -12,7 +12,13 @@
   -->
 
 <locale name="en_US" full_name="U.S. English">
-	<message key="plugins.block.mostRead.displayName">"Most Read" Block</message>
-	<message key="plugins.block.mostRead.description">This plugin shows most read objects in the sidebar.</message>
-  <message key="plugins.block.mostRead.blockTitle">Most read last week</message>
+	<message key="plugins.blocks.mostRead.displayName">"Most Read" Block</message>
+	<message key="plugins.blocks.mostRead.description">This plugin shows most read objects in the sidebar.</message>
+  <message key="plugins.blocks.mostRead.blockTitle">Most read last week</message>
+
+  <message key="plugins.blocks.mostRead.settings.title">"Most Read" Block settings</message>
+  <message key="plugins.blocks.mostRead.settings.days">Days count</message>
+  <message key="plugins.blocks.mostRead.settings.blockTitle">Block title</message>
+  <message key="plugins.blocks.mostRead.settings.saved">"Most Read" Block plugin settings saved</message>
+
 </locale>

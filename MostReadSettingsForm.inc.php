@@ -21,8 +21,9 @@ class MostReadSettingsForm extends Form {
 	 * MostReadSettingsForm constructor.
 	 * @param $plugin
 	 */
-	function __construct($plugin){
+	function __construct($plugin, $contextId){
 		$this->plugin = $plugin;
+		$this->setContextId($contextId);
 		parent::__construct($plugin->getTemplateResource('settingsForm.tpl'));
 		$this->setData('pluginName', $plugin->getName());
 
@@ -31,14 +32,27 @@ class MostReadSettingsForm extends Form {
 		$this->addCheck(new FormValidatorPost($this));
 		$this->addCheck(new FormValidatorCSRF($this));		
 	}
+	/**
+	 * Get the Context ID.
+	 * @return int
+	 */
+	public function getContextId() {
+		return $this->_contextId;
+	}
 
+	/**
+	 * Set the Context ID.
+	 * @param $contextId int
+	 */
+	public function setContextId($contextId) {
+		$this->_contextId = $contextId;
+	}
 	/**
 	 * Initialize form data.
 	 */
 	function initData(){
 		$plugin = $this->plugin;
-		$context = Request::getContext();
-		$contextId = $context ? $context->getId() : CONTEXT_ID_NONE;
+		$contextId = $this->getContextId();
 		$mostReadBlockTitle = unserialize($plugin->getSetting($contextId, 'mostReadBlockTitle'));
 		$this->setData('mostReadDays', $plugin->getSetting($contextId, 'mostReadDays'));
 		$this->setData('mostReadBlockTitle', $mostReadBlockTitle);
@@ -61,10 +75,10 @@ class MostReadSettingsForm extends Form {
 	/**
 	 * Save settings.
 	 */
-	function execute(){
+	
+	public function execute(...$functionArgs) {
 		$plugin = $this->plugin;
-		$context = Request::getContext();
-		$contextId = $context ? $context->getId() : CONTEXT_ID_NONE;
+		$contextId = $this->getContextId();
 		$mostReadBlockTitle = serialize($this->getData('mostReadBlockTitle'));
 
 		$plugin->updateSetting($contextId, 'mostReadDays', $this->getData('mostReadDays'), 'string');
@@ -74,5 +88,7 @@ class MostReadSettingsForm extends Form {
 		$cacheManager = CacheManager::getManager();
 		$cache = $cacheManager->getCache('mostread', $contextId, array($plugin, '_cacheMiss'));
 		$cache->flush();
+		parent::execute(...$functionArgs);
+		
 	}
 }
