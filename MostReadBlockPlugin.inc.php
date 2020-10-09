@@ -103,7 +103,7 @@ class MostReadBlockPlugin extends BlockPlugin {
 		
 		$cacheManager = CacheManager::getManager();
 		$cache = $cacheManager->getCache($context->getId(), 'mostread' , array($this, '_cacheMiss'));
-		$cache->flush();
+
 		$daysToStale = 1;
 
 		if (time() - $cache->getCacheTime() > 60 * 60 * 24 * $daysToStale) {
