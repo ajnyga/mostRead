@@ -9,7 +9,7 @@
  *}
 <div class="pkp_block block_developed_by">
 	<div class="content">
-		<span class="title">{translate|escape key="plugins.block.mostRead.blockTitle"}</span>
+		<span class="title">{$blockTitle}</span>
 			<ul class="most_read">
 			{foreach from=$resultMetrics item=article}
 				<li class="most_read_article">

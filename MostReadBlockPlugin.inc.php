@@ -30,14 +30,14 @@ class MostReadBlockPlugin extends BlockPlugin {
 	 * @return String
 	 */
 	function getDisplayName() {
-		return __('plugins.block.mostRead.displayName');
+		return __('plugins.blocks.mostRead.displayName');
 	}
 
 	/**
 	 * Get a description of the plugin.
 	 */
 	function getDescription() {
-		return __('plugins.block.mostRead.description');
+		return __('plugins.blocks.mostRead.description');
 	}
 
 	/**
@@ -67,13 +67,15 @@ class MostReadBlockPlugin extends BlockPlugin {
 	 */
 	function manage($args, $request) {
 		$this->import('MostReadSettingsForm');
+		$context = Application::getRequest()->getContext();
+		$contextId = ($context && isset($context) && $context->getId()) ? $context->getId() : CONTEXT_SITE;
 		switch($request->getUserVar('verb')) {
 			case 'settings':
-				$settingsForm = new MostReadSettingsForm($this);
+				$settingsForm = new MostReadSettingsForm($this, $contextId);
 				$settingsForm->initData();
 				return new JSONMessage(true, $settingsForm->fetch($request));
 			case 'save':
-				$settingsForm = new MostReadSettingsForm($this);
+				$settingsForm = new MostReadSettingsForm($this, $contextId);
 				$settingsForm->readInputData();
 				if ($settingsForm->validate()) {
 					$settingsForm->execute();
@@ -81,7 +83,7 @@ class MostReadBlockPlugin extends BlockPlugin {
 					$notificationManager->createTrivialNotification(
 						$request->getUser()->getId(),
 						NOTIFICATION_TYPE_SUCCESS,
-						array('contents' => __('plugins.mostRead.settings.saved'))
+						array('contents' => __('plugins.blocks.mostRead.settings.saved'))
 					);
 					return new JSONMessage(true);
 				}
@@ -98,14 +100,17 @@ class MostReadBlockPlugin extends BlockPlugin {
 		if (!$context) return '';
 
 		$metricsDao = DAORegistry::getDAO('MetricsDAO');
+		
 		$cacheManager = CacheManager::getManager();
-		$cache = $cacheManager->getCache('mostread', $context->getId(), array($this, '_cacheMiss'));
+		$cache = $cacheManager->getCache($context->getId(), 'mostread' , array($this, '_cacheMiss'));
+
 		$daysToStale = 1;
 
 		if (time() - $cache->getCacheTime() > 60 * 60 * 24 * $daysToStale) {
 			$cache->flush();
 		}
 		$resultMetrics = $cache->getContents();
+
 		$templateMgr->assign('resultMetrics', $resultMetrics);
 
 		$mostReadBlockTitle = unserialize($this->getSetting($context->getId(), 'mostReadBlockTitle'));
@@ -120,14 +125,13 @@ class MostReadBlockPlugin extends BlockPlugin {
 	 * Set cache
 	 * @param $cache object
 	 */
+	
 	function _cacheMiss($cache) {
-		$metricsDao = DAORegistry::getDAO('MetricsDAO');
-		$publishedArticleDao = DAORegistry::getDAO('PublishedArticleDAO');
+		$submissionDao = DAORegistry::getDAO('SubmissionDAO'); /* @var $submissionDao SubmissionDAO */
+		
 		$journalDao = DAORegistry::getDAO('JournalDAO');
-		$request = Application::getRequest();
-		$context = $request->getContext();
-
-		$mostReadDays = (int) $this->getSetting($context->getId(), 'mostReadDays');
+	
+		$mostReadDays = (int) $this->getSetting($cache->context, 'mostReadDays');
 		if (empty($mostReadDays)){
 			$mostReadDays = 120;
 		}
@@ -136,7 +140,7 @@ class MostReadBlockPlugin extends BlockPlugin {
 		$currentDate = date('Ymd');
 
 		$filter = array(
-		        STATISTICS_DIMENSION_CONTEXT_ID => $context->getId(),
+		        STATISTICS_DIMENSION_CONTEXT_ID => $cache->context,
 		        STATISTICS_DIMENSION_ASSOC_TYPE => ASSOC_TYPE_SUBMISSION_FILE,
 		);
 		$filter[STATISTICS_DIMENSION_DAY]['from'] = $daysAgo;
@@ -147,11 +151,14 @@ class MostReadBlockPlugin extends BlockPlugin {
 		);
 		import('lib.pkp.classes.db.DBResultRange');
 		$dbResultRange = new DBResultRange(5);
-		$metricsDao =& DAORegistry::getDAO('MetricsDAO');
+		
+		$metricsDao = DAORegistry::getDAO('MetricsDAO'); /* @var $metricsDao MetricsDAO */
 		$result = $metricsDao->getMetrics(OJS_METRIC_TYPE_COUNTER, $column, $filter, $orderBy, $dbResultRange);
+		
 		foreach ($result as $resultRecord) {
-		    $submissionId = $resultRecord[STATISTICS_DIMENSION_SUBMISSION_ID];
-		    $article = $publishedArticleDao->getById($submissionId);
+				$submissionId = $resultRecord[STATISTICS_DIMENSION_SUBMISSION_ID];
+				$article = $submissionDao->getById($submissionId);
+				
 		    $journal = $journalDao->getById($article->getJournalId());
 		    $articles[$submissionId]['journalPath'] = $journal->getPath();
 		    $articles[$submissionId]['articleId'] = $article->getBestArticleId();

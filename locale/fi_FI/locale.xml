@@ -13,7 +13,7 @@
   -->
 
 <locale name="fi_FI" full_name="Suomi">
-	<message key="plugins.block.mostRead.displayName">Luetuimmat artikkelit -lohko</message>
-	<message key="plugins.block.mostRead.description">Tämä lohkolisäosa näyttää sivupalkissa luetuimmat artikkelit.</message>
-  <message key="plugins.block.mostRead.blockTitle">Viikon luetuimmat</message>  
+	<message key="plugins.blocks.mostRead.displayName">Luetuimmat artikkelit -lohko</message>
+	<message key="plugins.blocks.mostRead.description">Tämä lohkolisäosa näyttää sivupalkissa luetuimmat artikkelit.</message>
+  <message key="plugins.blocks.mostRead.blockTitle">Viikon luetuimmat</message>  
 </locale>
