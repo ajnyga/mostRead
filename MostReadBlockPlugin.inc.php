@@ -30,76 +30,143 @@ class MostReadBlockPlugin extends BlockPlugin {
 	 * @return String
 	 */
 	function getDisplayName() {
-		return __('plugins.block.mostRead.displayName');
+		return __('plugins.blocks.mostRead.displayName');
 	}
 
 	/**
 	 * Get a description of the plugin.
 	 */
 	function getDescription() {
-		return __('plugins.block.mostRead.description');
+		return __('plugins.blocks.mostRead.description');
 	}
 
 	/**
-	 * @see BlockPlugin::getContents
+	 * @copydoc Plugin::getActions()
+	 */
+	function getActions($request, $actionArgs) {
+		$router = $request->getRouter();
+		import('lib.pkp.classes.linkAction.request.AjaxModal');
+		return array_merge(
+			$this->getEnabled()?array(
+				new LinkAction(
+					'settings',
+					new AjaxModal(
+						$router->url($request, null, null, 'manage', null, array_merge($actionArgs, array('verb' => 'settings'))),
+						$this->getDisplayName()
+					),
+					__('manager.plugins.settings'),
+					null
+				),
+			):array(),
+			parent::getActions($request, $actionArgs)
+		);
+	}
+
+ 	/**
+	 * @copydoc Plugin::manage()
+	 */
+	function manage($args, $request) {
+		$this->import('MostReadSettingsForm');
+		$context = Application::getRequest()->getContext();
+		$contextId = ($context && isset($context) && $context->getId()) ? $context->getId() : CONTEXT_SITE;
+		switch($request->getUserVar('verb')) {
+			case 'settings':
+				$settingsForm = new MostReadSettingsForm($this, $contextId);
+				$settingsForm->initData();
+				return new JSONMessage(true, $settingsForm->fetch($request));
+			case 'save':
+				$settingsForm = new MostReadSettingsForm($this, $contextId);
+				$settingsForm->readInputData();
+				if ($settingsForm->validate()) {
+					$settingsForm->execute();
+					$notificationManager = new NotificationManager();
+					$notificationManager->createTrivialNotification(
+						$request->getUser()->getId(),
+						NOTIFICATION_TYPE_SUCCESS,
+						array('contents' => __('plugins.blocks.mostRead.settings.saved'))
+					);
+					return new JSONMessage(true);
+				}
+				return new JSONMessage(true, $settingsForm->fetch($request));
+		}
+		return parent::manage($args, $request);
+	}
+
+	/**
+	 * @copydoc BlockPlugin::getContents
 	 */
 	function getContents($templateMgr, $request = null) {
 		$context = $request->getContext();
 		if (!$context) return '';
 
 		$metricsDao = DAORegistry::getDAO('MetricsDAO');
-		$cacheManager =& CacheManager::getManager();
-		$cache  =& $cacheManager->getCache('mostread', $context->getId(), array($this, '_cacheMiss'));
+		
+		$cacheManager = CacheManager::getManager();
+		$cache = $cacheManager->getCache($context->getId(), 'mostread' , array($this, '_cacheMiss'));
+
 		$daysToStale = 1;
-		$cachedMetrics = false;
 
 		if (time() - $cache->getCacheTime() > 60 * 60 * 24 * $daysToStale) {
-			$cachedMetrics = $cache->getContents();
 			$cache->flush();
 		}
 		$resultMetrics = $cache->getContents();
 
-		if (!$resultMetrics && $cachedMetrics) {
-			$resultMetrics = $cachedMetrics;
-			$cache->setEntireCache($cachedMetrics);
-		} elseif (!$resultMetrics) {
-			$cache->flush();
-		}
-
 		$templateMgr->assign('resultMetrics', $resultMetrics);
+
+		$mostReadBlockTitle = unserialize($this->getSetting($context->getId(), 'mostReadBlockTitle'));
+		$locale = AppLocale::getLocale();
+		$blockTitle = $mostReadBlockTitle[$locale] ? $mostReadBlockTitle[$locale] : __('plugins.blocks.mostRead.settings.blockTitle');
+		$templateMgr->assign('blockTitle', $blockTitle);
 
 		return parent::getContents($templateMgr, $request);
 	}
 
+	/**
+	 * Set cache
+	 * @param $cache object
+	 */
+	
 	function _cacheMiss($cache) {
-			$metricsDao = DAORegistry::getDAO('MetricsDAO');
-			$publishedArticleDao = DAORegistry::getDAO('PublishedArticleDAO');
-			$journalDao = DAORegistry::getDAO('JournalDAO');
-			$request = Application::getRequest();
-			$context = $request->getContext();
+		$submissionDao = DAORegistry::getDAO('SubmissionDAO'); /* @var $submissionDao SubmissionDAO */
+		
+		$journalDao = DAORegistry::getDAO('JournalDAO');
+	
+		$mostReadDays = (int) $this->getSetting($cache->context, 'mostReadDays');
+		if (empty($mostReadDays)){
+			$mostReadDays = 120;
+		}
+		$dayString = "-" . $mostReadDays . " days";
+		$daysAgo = date('Ymd', strtotime($dayString));
+		$currentDate = date('Ymd');
 
-			$currentDate = date('Ymd');
-			$weekAgo = date('Ymd', strtotime("-1 week"));
-
-			$result = $metricsDao->retrieve(
-				"SELECT submission_id, SUM(metric) AS metric FROM metrics WHERE (day BETWEEN $weekAgo AND $currentDate) AND (assoc_type='515' AND submission_id IS NOT NULL) AND (context_id='?') GROUP BY submission_id ORDER BY metric DESC LIMIT 5", (int) $context->getId()
-			);
-
-			while (!$result->EOF) {
-				$resultRow = $result->GetRowAssoc(false);
-				$article = $publishedArticleDao->getById($resultRow['submission_id']);	
-				$journal = $journalDao->getById($article->getJournalId());
-				$articles[$resultRow['submission_id']]['journalPath'] = $journal->getPath();
-				$articles[$resultRow['submission_id']]['articleId'] = $article->getBestArticleId();
-				$articles[$resultRow['submission_id']]['articleTitle'] = $article->getLocalizedTitle();
-				$articles[$resultRow['submission_id']]['articleSubTitle'] = $article->getLocalizedSubtitle();
-				$articles[$resultRow['submission_id']]['metric'] = $resultRow['metric'];
-				$result->MoveNext();
-			}
-			$result->Close();			
-			$cache->setEntireCache($articles);
-			return $result;
-	}
+		$filter = array(
+		        STATISTICS_DIMENSION_CONTEXT_ID => $cache->context,
+		        STATISTICS_DIMENSION_ASSOC_TYPE => ASSOC_TYPE_SUBMISSION_FILE,
+		);
+		$filter[STATISTICS_DIMENSION_DAY]['from'] = $daysAgo;
+		$filter[STATISTICS_DIMENSION_DAY]['to'] = $currentDate;
+		$orderBy = array(STATISTICS_METRIC => STATISTICS_ORDER_DESC);
+		$column = array(
+		        STATISTICS_DIMENSION_SUBMISSION_ID,
+		);
+		import('lib.pkp.classes.db.DBResultRange');
+		$dbResultRange = new DBResultRange(5);
+		
+		$metricsDao = DAORegistry::getDAO('MetricsDAO'); /* @var $metricsDao MetricsDAO */
+		$result = $metricsDao->getMetrics(OJS_METRIC_TYPE_COUNTER, $column, $filter, $orderBy, $dbResultRange);
+		
+		foreach ($result as $resultRecord) {
+				$submissionId = $resultRecord[STATISTICS_DIMENSION_SUBMISSION_ID];
+				$article = $submissionDao->getById($submissionId);
+				
+		    $journal = $journalDao->getById($article->getJournalId());
+		    $articles[$submissionId]['journalPath'] = $journal->getPath();
+		    $articles[$submissionId]['articleId'] = $article->getBestArticleId();
+		    $articles[$submissionId]['articleTitle'] = $article->getLocalizedTitle();
+		    $articles[$submissionId]['metric'] = $resultRecord[STATISTICS_METRIC];
+		}
+		$cache->setEntireCache($articles);
+		return $result;
+    }
 }
-
 ?>

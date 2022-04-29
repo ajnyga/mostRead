@@ -9,19 +9,12 @@
  *}
 <div class="pkp_block block_developed_by">
 	<div class="content">
-		<span class="title">{translate|escape key="plugins.block.mostRead.blockTitle"}</span>
+		<span class="title">{$blockTitle}</span>
 			<ul class="most_read">
 			{foreach from=$resultMetrics item=article}
 				<li class="most_read_article">
-					<div class="most_read_article_title">
-						<a href="{url journal=$article.journalPath page="article" op="view" path=$article.articleId}">
-							{$article.articleTitle}{if !empty($article.articleSubTitle)} {$article.articleSubTitle}{/if}
-						</a>
-					</div>
-					<div class="most_read_article_journal">
-					<div class="most_read_article_journal">
-						<img src="{$baseUrl}/plugins/blocks/mostRead/imagens/icon.png" alt="views" style="max-height: 25px;"><b style="color: #0c0c0c;">{$article.metric}</b>
-					</div>
+					<div class="most_read_article_title"><a href="{url journal=$article.journalPath page="article" op="view" path=$article.articleId}">{$article.articleTitle}{if !empty($article.articleSubTitle)} {$article.articleSubTitle}{/if}</a></div>
+					<div class="most_read_article_journal"><span class="fa fa-eye"></span> {$article.metric}</div>
 				</li>
 			{/foreach}
 			</ul>
