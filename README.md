@@ -1,7 +1,6 @@
-Most Read Articles block plugin
+Most Read Articles block plugin v. 3.3.0.0
 ===========
-Plug-in for version 3.2+ of OJS.
-v. 3.0.0.8
+OJS 3.3
 ------------
 
 Plugin for the creation of a “most read articles” section in the OJS3 frontend sidebar.
@@ -13,21 +12,8 @@ Functionality
 
 System requirements
 --------------------
-1. OJS version 3.2 or higher
+- OJS version 3.3
 
-Known Bugs
----------------
-None
-
-Installation
--------------
-Upload the files to the server using the appropriate OJS module dedicated to installing the plugins (the plugin must be in compressed format .tar.gz).
-
-tar zcvf mostRead_OJS_3.2.tar.gz --exclude .git --exclude .vscode --exclude .DS_Store mostRead
-
-License
--------
-The plugin is developed by The Federation of Finnish Learned Societies and is released under [GNU General Public License, version 2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
 
 Contributions
 -------
