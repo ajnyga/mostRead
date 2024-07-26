@@ -1,9 +1,9 @@
 {**
  * plugins/blocks/mostRead/settingsForm.tpl
  *
- * Copyright (c) 2014-2019 Simon Fraser University
- * Copyright (c) 2003-2019 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+ * Copyright (c) 2014-2024 Simon Fraser University
+ * Copyright (c) 2003-2024 John Willinsky
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * Most read plugin settings
  *
@@ -15,7 +15,7 @@
 	{rdelim});
 </script>
 
-<form class="pkp_form" id="mostReadSettingsForm" method="post" action="{url op="manage" category="blocks" plugin=$pluginName verb="save"}">
+<form class="pkp_form" id="mostReadSettingsForm" method="post" action="{url router=PKP\core\PKPApplication::ROUTE_COMPONENT op="manage" category="blocks" plugin=$pluginName verb="settings" save=true}">
 	{csrf}
 
 	{include file="controllers/notification/inPlaceNotification.tpl" notificationId="mostReadFormNotification"}
@@ -32,6 +32,6 @@
 
 	{/fbvFormArea}
 
-	{fbvFormButtons id="WGLSettingsFormSubmit" submitText="common.save" hideCancel=true}
+	{fbvFormButtons}
 
 </form>
