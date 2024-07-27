@@ -26,6 +26,7 @@ use PKP\core\JSONMessage;
 use PKP\linkAction\LinkAction; 
 use PKP\linkAction\request\AjaxModal;
 use PKP\plugins\BlockPlugin;
+use PKP\submission\PKPSubmission;
 
 class MostReadBlockPlugin extends BlockPlugin {
 
@@ -138,11 +139,12 @@ class MostReadBlockPlugin extends BlockPlugin {
 
 		$mostRead = [];
 		foreach($metrics as $metric){
-			$submission = Repo::submission()->get($metric('submissionId'));
-			if(isset($submission)){
+			$submission = Repo::submission()->get($metric['submissionId']);
+			if(isset($submission) && $submission?->getCurrentPublication()->getData('status') === PKPSubmission::STATUS_PUBLISHED) 
+			{
 				$mostRead[] = [
-                    'url' => $metric('url'),
-                    'metric' => $metric('metric'),
+                    'url' => $metric['url'],
+                    'metric' => $metric['metric'],
 					'title' => $submission?->getCurrentPublication()->getLocalizedFullTitle($locale, 'html'),
                 ];
 			}
