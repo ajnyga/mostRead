@@ -132,9 +132,8 @@ class MostReadBlockPlugin extends BlockPlugin {
 		}
 
 		$locale = AppLocale::getLocale();
-
 		$mostReadBlockTitle = (array) json_decode($this->getSetting($context->getId(), 'mostReadBlockTitle'));
-		$blockTitle = $mostReadBlockTitle[$locale] ? $mostReadBlockTitle[$locale] : __('plugins.blocks.mostRead.settings.blockTitle');
+		$blockTitle = $mostReadBlockTitle[$locale] ? $mostReadBlockTitle[$locale] : "";
 		$templateMgr->assign('blockTitle', $blockTitle);
 
 		$mostRead = [];
@@ -143,9 +142,9 @@ class MostReadBlockPlugin extends BlockPlugin {
 			if(isset($submission) && $submission?->getCurrentPublication()->getData('status') === PKPSubmission::STATUS_PUBLISHED) 
 			{
 				$mostRead[] = [
-                    'url' => $metric['url'],
-                    'metric' => $metric['metric'],
-					'title' => $submission?->getCurrentPublication()->getLocalizedFullTitle($locale, 'html'),
+					'url' => Application::get()->getRequest()->url($context?->getPath(), 'article', 'view', [$submission->getBestId()]),
+					'metric' => $metric['metric'],
+					'title' => $submission?->getCurrentPublication()->getLocalizedFullTitle($locale, 'html')
                 ];
 			}
 		}
@@ -170,20 +169,16 @@ class MostReadBlockPlugin extends BlockPlugin {
         $mostRead = Services::get('publicationStats')->getTotals([
             'dateStart' => date('Y-m-d', strtotime($dayString)),
             'contextIds' => [$cache->context],
-            'count' => 6,
+            'count' => 5,
 			'assocTypes' => [Application::ASSOC_TYPE_SUBMISSION_FILE],
         ]);
 
         $results = (new Collection($mostRead))
             ->map(function($result) {
                 $submission = Repo::submission()->get($result->submission_id);
-                $context = Services::get('context')->get($cache->context);
                 return [
                     'submissionId' => $result->submission_id,
-                    'metric' => $result->metric,
-                    'url' => Application::get()
-                        ->getRequest()
-                        ->url($context?->getPath(), 'article', 'view', [$submission->getBestId()])
+                    'metric' => $result->metric
                 ];
             })
             ->filter(function($result) {

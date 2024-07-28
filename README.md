@@ -1,9 +1,13 @@
 # Most Read Articles block plugin v. 3.4.0.0
-Plugin for the creation of a “most read articles” section in the OJS3 frontend sidebar.
+An Open Journal Systems plugin for adding a “most read articles” section to the frontend sidebar.
 
 ## Functionality
-1. Default: adds a block to the sidebar with the title "BLOCK TITLE" followed by the 5 most viewed articles in the last week; for each article are shown title (linking to article page) and fa fa eye icon followed by view count.
-2. The title of the block and the number of days to be included in the statistics ("Most read block settings" field) can be modified by Settings. Default values for empty settings are "Block title" and "7"
+
+After enabling the plugin activate the Most Read Articles Block from the journal sidebar settings. 
+
+By default the plugin adds a new block to the sidebar displaying the 5 most viewed articles in the last week (7 days). For each article are shown title (linking to article page) and fa fa eye icon followed by full text view count.
+
+In the plugin settings the journal manager can add a custom block heading and choose a custom number of days for showing statistics.
 
 ## System requirements
 - OJS version 3.4

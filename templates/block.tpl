@@ -9,7 +9,7 @@
  *}
 <div class="pkp_block block_developed_by">
 	<div class="content">
-		<span class="title">{$blockTitle}</span>
+		{if isset($blockTitle) }<span class="title">{$blockTitle}</span>{/if}
 			<ul class="most_read">
 			{foreach from=$mostRead item=submission}
 				<li class="most_read_article">
