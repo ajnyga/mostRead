@@ -18,7 +18,7 @@ msgid "plugins.blocks.mostRead.description"
 msgstr "Este plugin mostra artigos mais lidos na barra lateral."
 
 msgid "plugins.blocks.mostRead.blockTitle"
-msgstr "Mais lidos na semana passada"
+msgstr "Artigos mais lidos"
 
 msgid "plugins.blocks.mostRead.settings.title"
 msgstr "Configurações Most Read Block"
@@ -30,4 +30,4 @@ msgid "plugins.blocks.mostRead.settings.blockTitle"
 msgstr "Título do bloco"
 
 msgid "plugins.blocks.mostRead.settings.saved"
-msgstr "configurações do plug-in do bloco de artigos mais lido salvas"
+msgstr "Configurações do plug-in do bloco de artigos mais lido"

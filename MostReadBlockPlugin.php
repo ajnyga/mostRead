@@ -182,7 +182,7 @@ class MostReadBlockPlugin extends BlockPlugin {
                 ];
             })
             ->filter(function($result) {
-                return $result['submissionId'] && $result['url'];
+                return $result['submissionId'] && $result['metric'];
             })
             ->toArray();
 
