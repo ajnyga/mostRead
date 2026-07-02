@@ -1,31 +1,35 @@
 <?php
 
 /**
- * @file plugins/blocks/mostRead/MostReadSettingsForm.inc.php
+ * @file plugins/blocks/mostRead/MostReadSettingsForm.php
  *
  * Copyright (c) 2014-2024 Simon Fraser University
  * Copyright (c) 2003-2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class MostReadSettingsForm
- * @ingroup plugins_generic_mostRead
+ *
+ * @ingroup plugins_blocks_mostRead
  *
  * @brief Form for journal managers to modify Most Read plugin settings
  */
 
- namespace APP\plugins\blocks\mostRead;
+namespace APP\plugins\blocks\mostRead;
 
- use APP\template\TemplateManager;
- use PKP\cache\CacheManager;
- use PKP\form\Form;
+use APP\template\TemplateManager;
+use PKP\form\Form;
+use PKP\form\validation\FormValidator;
+use PKP\form\validation\FormValidatorCSRF;
+use PKP\form\validation\FormValidatorCustom;
+use PKP\form\validation\FormValidatorPost;
 
-class MostReadSettingsForm extends Form {
-
+class MostReadSettingsForm extends Form
+{
     /** @var int */
     public $_contextId;
 
-    /** @var object */
-    public $_plugin;	
+    /** @var MostReadBlockPlugin */
+    public $_plugin;
 
     /**
      * Constructor
@@ -40,10 +44,10 @@ class MostReadSettingsForm extends Form {
 
         parent::__construct($plugin->getTemplateResource('settingsForm.tpl'));
 
-		$this->addCheck(new \PKP\form\validation\FormValidator($this, 'mostReadDays', 'required', 'plugins.blocks.mostRead.settings.mostReadDaysRequired'));
-
-        $this->addCheck(new \PKP\form\validation\FormValidatorPost($this));
-        $this->addCheck(new \PKP\form\validation\FormValidatorCSRF($this));
+        $this->addCheck(new FormValidator($this, 'mostReadDays', 'required', 'plugins.blocks.mostRead.settings.mostReadDaysRequired'));
+        $this->addCheck(new FormValidatorCustom($this, 'mostReadCount', 'optional', 'plugins.blocks.mostRead.settings.mostReadCountInvalid', fn ($value) => ctype_digit((string) $value) && (int) $value >= 1));
+        $this->addCheck(new FormValidatorPost($this));
+        $this->addCheck(new FormValidatorCSRF($this));
     }
 
     /**
@@ -51,10 +55,11 @@ class MostReadSettingsForm extends Form {
      */
     public function initData()
     {
-		$mostReadBlockTitle = (array) json_decode($this->_plugin->getSetting($this->_contextId, 'mostReadBlockTitle'));
+        $mostReadBlockTitle = (array) json_decode($this->_plugin->getSetting($this->_contextId, 'mostReadBlockTitle') ?? '');
         $this->_data = [
             'mostReadDays' => $this->_plugin->getSetting($this->_contextId, 'mostReadDays'),
-			'mostReadBlockTitle' => $mostReadBlockTitle,
+            'mostReadCount' => $this->_plugin->getSetting($this->_contextId, 'mostReadCount'),
+            'mostReadBlockTitle' => $mostReadBlockTitle,
         ];
     }
 
@@ -63,8 +68,8 @@ class MostReadSettingsForm extends Form {
      */
     public function readInputData()
     {
-		$this->readUserVars(array('mostReadDays', 'mostReadBlockTitle'));
-    }	
+        $this->readUserVars(['mostReadDays', 'mostReadCount', 'mostReadBlockTitle']);
+    }
 
     /**
      * @copydoc Form::fetch()
@@ -83,18 +88,14 @@ class MostReadSettingsForm extends Form {
      */
     public function execute(...$functionArgs)
     {
-		$mostReadBlockTitle = json_encode($this->getData('mostReadBlockTitle'));
+        $mostReadBlockTitle = json_encode($this->getData('mostReadBlockTitle'));
         $this->_plugin->updateSetting($this->_contextId, 'mostReadDays', $this->getData('mostReadDays'), 'string');
-		$this->_plugin->updateSetting($this->_contextId, 'mostReadBlockTitle', $mostReadBlockTitle, 'string');
-        
-		# empty current cache
-		$cacheManager = CacheManager::getManager();
-		$cache = $cacheManager->getCache('mostread', $this->_contextId, array($this->_plugin, 'getMostReadCache'));
-		$cache->flush();		
-		parent::execute(...$functionArgs);
-    }
-}
+        $this->_plugin->updateSetting($this->_contextId, 'mostReadCount', $this->getData('mostReadCount'), 'string');
+        $this->_plugin->updateSetting($this->_contextId, 'mostReadBlockTitle', $mostReadBlockTitle, 'string');
 
-if (!PKP_STRICT_MODE) {
-    class_alias('\APP\plugins\blocks\mostRead\MostReadSettingsForm', '\MostReadSettingsForm');
+        // Empty the current cache so new settings take effect immediately
+        $this->_plugin->clearCache($this->_contextId);
+
+        return parent::execute(...$functionArgs);
+    }
 }

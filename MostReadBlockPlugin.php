@@ -1,13 +1,14 @@
 <?php
 
 /**
- * @file plugins/blocks/mostRead/MostReadBlockPlugin.inc.php
+ * @file plugins/blocks/mostRead/MostReadBlockPlugin.php
  *
  * Copyright (c) 2014-2024 Simon Fraser University
  * Copyright (c) 2003-2024 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @class MostReadBlockPlugin
+ *
  * @ingroup plugins_blocks_mostRead
  *
  * @brief Class for "Most Read" block plugin
@@ -16,65 +17,67 @@
 namespace APP\plugins\blocks\mostRead;
 
 use APP\core\Application;
-use APP\core\Services;
-use APP\i18n\AppLocale;
 use APP\facades\Repo;
 use APP\template\TemplateManager;
 use Illuminate\Support\Collection;
-use PKP\cache\CacheManager;
+use Illuminate\Support\Facades\Cache;
 use PKP\core\JSONMessage;
-use PKP\linkAction\LinkAction; 
+use PKP\facades\Locale;
+use PKP\linkAction\LinkAction;
 use PKP\linkAction\request\AjaxModal;
 use PKP\plugins\BlockPlugin;
 use PKP\submission\PKPSubmission;
 
-class MostReadBlockPlugin extends BlockPlugin {
+class MostReadBlockPlugin extends BlockPlugin
+{
+    /** Cache lifetime in seconds (1 day). */
+    private const CACHE_TTL = 60 * 60 * 24;
 
-	/**
-	 * Install default settings on journal creation.
-	 * @return string
-	 */
-	function getContextSpecificPluginSettingsFile() {
-		return $this->getPluginPath() . '/settings.xml';
-	}
+    /**
+     * Install default settings on journal creation.
+     */
+    public function getContextSpecificPluginSettingsFile()
+    {
+        return $this->getPluginPath() . '/settings.xml';
+    }
 
-	/**
-	 * Get the display name of this plugin.
-	 * @return String
-	 */
-	function getDisplayName() {
-		return __('plugins.blocks.mostRead.displayName');
-	}
+    /**
+     * Get the display name of this plugin.
+     */
+    public function getDisplayName()
+    {
+        return __('plugins.blocks.mostRead.displayName');
+    }
 
-	/**
-	 * Get a description of the plugin.
-	 */
-	function getDescription() {
-		return __('plugins.blocks.mostRead.description');
-	}
+    /**
+     * Get a description of the plugin.
+     */
+    public function getDescription()
+    {
+        return __('plugins.blocks.mostRead.description');
+    }
 
-	
-	/**
-	 * @copydoc Plugin::getActions()
-	 */
-	function getActions($request, $actionArgs) {
-		$router = $request->getRouter();
-		import('lib.pkp.classes.linkAction.request.AjaxModal');
-		return array_merge(
-			$this->getEnabled()?array(
-				new LinkAction(
-					'settings',
-					new AjaxModal(
-						$router->url($request, null, null, 'manage', null, array_merge($actionArgs, array('verb' => 'settings'))),
-						$this->getDisplayName()
-					),
-					__('manager.plugins.settings'),
-					null
-				),
-			):array(),
-			parent::getActions($request, $actionArgs)
-		);
-	}
+    /**
+     * @copydoc Plugin::getActions()
+     */
+    public function getActions($request, $actionArgs)
+    {
+        $router = $request->getRouter();
+        return array_merge(
+            $this->getEnabled() ? [
+                new LinkAction(
+                    'settings',
+                    new AjaxModal(
+                        $router->url($request, null, null, 'manage', null, array_merge($actionArgs, ['verb' => 'settings'])),
+                        $this->getDisplayName()
+                    ),
+                    __('manager.plugins.settings'),
+                    null
+                ),
+            ] : [],
+            parent::getActions($request, $actionArgs)
+        );
+    }
 
     /**
      * @copydoc Plugin::manage()
@@ -103,95 +106,99 @@ class MostReadBlockPlugin extends BlockPlugin {
         return parent::manage($args, $request);
     }
 
-	/**
-	 * @copydoc BlockPlugin::getContents
-	 */
-	function getContents($templateMgr, $request = null) 
-	{
-		$context = $request->getContext();
-		if (!$context) return '';
-		
-		$cacheManager = CacheManager::getManager();
-		$cache = $cacheManager->getCache($context->getId(), 'mostread' , array($this, 'getMostReadCache'));
+    /**
+     * @copydoc BlockPlugin::getContents()
+     */
+    public function getContents($templateMgr, $request = null)
+    {
+        $context = $request?->getContext();
+        if (!$context) {
+            return '';
+        }
 
-		$daysToStale = 1;
-		$cachedMetrics = false;
+        $contextId = $context->getId();
 
-		if (time() - $cache->getCacheTime() > 60 * 60 * 24 * $daysToStale) {
-			$cachedMetrics = $cache->getContents();
-			$cache->flush();
-		}
+        $metrics = Cache::remember(
+            $this->getCacheKey($contextId),
+            self::CACHE_TTL,
+            fn () => $this->loadMostRead($contextId)
+        );
 
-		$metrics = $cache->getContents();
+        $locale = Locale::getLocale();
 
-		if (!$metrics && $cachedMetrics) {
-			$metrics = $cachedMetrics;
-			$cache->setEntireCache($cachedMetrics);
-		} elseif (!$metrics) {
-			$cache->flush();
-		}
+        $mostReadBlockTitle = (array) json_decode($this->getSetting($contextId, 'mostReadBlockTitle') ?? '');
+        $blockTitle = $mostReadBlockTitle[$locale] ?? '';
+        $templateMgr->assign('blockTitle', $blockTitle);
 
-		$mostReadBlockTitleSetting = json_decode(
-			$this->getSetting($context->getId(), 'mostReadBlockTitle'),
-			true
-		) ?: null;
+        $mostRead = [];
+        foreach ($metrics as $metric) {
+            $submission = Repo::submission()->get($metric['submissionId']);
+            if (!$submission) {
+                continue;
+            }
+            $publication = $submission->getCurrentPublication();
+            if (!$publication || (int) $publication->getData('status') !== PKPSubmission::STATUS_PUBLISHED) {
+                continue;
+            }
+            $mostRead[] = [
+                'url' => $request->url($context->getPath(), 'article', 'view', [$submission->getBestId()]),
+                'metric' => $metric['metric'],
+                'title' => $publication->getLocalizedFullTitle($locale, 'html'),
+            ];
+        }
 
-		$locale = AppLocale::getLocale();
-		$mostReadBlockTitle = $mostReadBlockTitleSetting[$locale] ?? null;
-		$templateMgr->assign('blockTitle', $mostReadBlockTitle);
+        $templateMgr->assign('mostRead', $mostRead);
+        return parent::getContents($templateMgr, $request);
+    }
 
-		$mostRead = [];
-		foreach($metrics as $metric){
-			$submission = Repo::submission()->get($metric['submissionId']);
-			if(isset($submission) && $submission?->getCurrentPublication()->getData('status') === PKPSubmission::STATUS_PUBLISHED) 
-			{
-				$mostRead[] = [
-					'url' => Application::get()->getRequest()->url($context?->getPath(), 'article', 'view', [$submission->getBestId()]),
-					'metric' => $metric['metric'],
-					'title' => $submission?->getCurrentPublication()->getLocalizedFullTitle($locale, 'html')
-                ];
-			}
-		}
+    /**
+     * Build the cache key for a given context.
+     */
+    public function getCacheKey(int $contextId): string
+    {
+        return "plugins.blocks.mostRead.{$contextId}";
+    }
 
-		$templateMgr->assign('mostRead', $mostRead);
-		return parent::getContents($templateMgr, $request);
-	}
+    /**
+     * Clear the cached metrics for a given context.
+     */
+    public function clearCache(int $contextId): void
+    {
+        Cache::forget($this->getCacheKey($contextId));
+    }
 
-	/**
-	 * Set cache
-	 * @param $cache object
-	 */
-	
-	function getMostReadCache($cache): array 
-	{
-		$mostReadDays = (int) $this->getSetting($cache->context, 'mostReadDays');
-		if (empty($mostReadDays)){
-			$mostReadDays = 7;
-		}
-		$dayString = "-" . $mostReadDays . " days";
+    /**
+     * Query the most read submissions for a context.
+     *
+     * @return array<int, array{submissionId: int, metric: int}>
+     */
+    public function loadMostRead(int $contextId): array
+    {
+        $mostReadDays = (int) $this->getSetting($contextId, 'mostReadDays');
+        if (empty($mostReadDays)) {
+            $mostReadDays = 7;
+        }
+        $dayString = '-' . $mostReadDays . ' days';
 
-        $mostRead = Services::get('publicationStats')->getTotals([
+        $mostReadCount = (int) $this->getSetting($contextId, 'mostReadCount');
+        if ($mostReadCount < 1) {
+            $mostReadCount = 5;
+        }
+
+        $mostRead = app()->get('publicationStats')->getTotals([
             'dateStart' => date('Y-m-d', strtotime($dayString)),
-            'contextIds' => [$cache->context],
-            'count' => 5,
-			'assocTypes' => [Application::ASSOC_TYPE_SUBMISSION_FILE],
+            'contextIds' => [$contextId],
+            'count' => $mostReadCount,
+            'assocTypes' => [Application::ASSOC_TYPE_SUBMISSION_FILE],
         ]);
 
-        $results = (new Collection($mostRead))
-            ->map(function($result) {
-                $submission = Repo::submission()->get($result->submission_id);
-                return [
-                    'submissionId' => $result->submission_id,
-                    'metric' => $result->metric
-                ];
-            })
-            ->filter(function($result) {
-                return $result['submissionId'] && $result['metric'];
-            })
+        return (new Collection($mostRead))
+            ->map(fn ($result) => [
+                'submissionId' => $result->submission_id,
+                'metric' => $result->metric,
+            ])
+            ->filter(fn ($result) => $result['submissionId'] && $result['metric'])
+            ->values()
             ->toArray();
-
-		$cache->setEntireCache($results);
-		return $results;
     }
 }
-?>
