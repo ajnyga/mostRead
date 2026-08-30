@@ -31,3 +31,12 @@ msgstr "Block title"
 
 msgid "plugins.blocks.mostRead.settings.saved"
 msgstr "Most Read Block plugin settings saved"
+
+msgid "plugins.blocks.mostRead.settings.mostReadDaysRequired"
+msgstr "Please enter the number of days to consider."
+
+msgid "plugins.blocks.mostRead.settings.count"
+msgstr "Number of articles"
+
+msgid "plugins.blocks.mostRead.settings.mostReadCountInvalid"
+msgstr "Please enter a whole number greater than or equal to 1."

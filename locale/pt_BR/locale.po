@@ -31,3 +31,12 @@ msgstr "Título do bloco"
 
 msgid "plugins.blocks.mostRead.settings.saved"
 msgstr "Configurações do plug-in do bloco de artigos mais lido"
+
+msgid "plugins.blocks.mostRead.settings.mostReadDaysRequired"
+msgstr "Informe a quantidade de dias a considerar."
+
+msgid "plugins.blocks.mostRead.settings.count"
+msgstr "Quantidade de artigos"
+
+msgid "plugins.blocks.mostRead.settings.mostReadCountInvalid"
+msgstr "Informe um número inteiro maior ou igual a 1."

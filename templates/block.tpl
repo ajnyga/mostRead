@@ -1,5 +1,5 @@
 {**
- * plugins/blocks/mostRead/block.tpl
+ * plugins/blocks/mostRead/templates/block.tpl
  *
  * Copyright (c) 2014-2024 Simon Fraser University
  * Copyright (c) 2003-2024 John Willinsky
@@ -7,16 +7,18 @@
  *
  * "Most Read" block.
  *}
-<div class="pkp_block block_developed_by">
+{if !empty($mostRead)}
+<div class="pkp_block block_most_read">
 	<div class="content">
-		{if isset($blockTitle) }<span class="title">{$blockTitle}</span>{/if}
-			<ul class="most_read">
+		{if !empty($blockTitle)}<span class="title">{$blockTitle|escape}</span>{/if}
+		<ul class="most_read">
 			{foreach from=$mostRead item=submission}
 				<li class="most_read_article">
-					<div class="most_read_article_title"><a href="{$submission.url}">{$submission.title}</a></div>
-					<div class="most_read_article_journal"><span class="fa fa-eye"></span> {$submission.metric}</div>
+					<div class="most_read_article_title"><a href="{$submission.url|escape}">{$submission.title}</a></div>
+					<div class="most_read_article_journal"><span class="fa fa-eye"></span> {$submission.metric|escape}</div>
 				</li>
 			{/foreach}
-			</ul>
+		</ul>
 	</div>
 </div>
+{/if}
