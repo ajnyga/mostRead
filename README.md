@@ -1,4 +1,4 @@
-# Most Read Articles block plugin v. 3.4.0.0
+# Most Read Articles block plugin v. 3.4
 An Open Journal Systems plugin for adding a “most read articles” section to the frontend sidebar.
 
 ## Functionality

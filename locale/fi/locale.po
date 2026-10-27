@@ -31,3 +31,12 @@ msgstr "Lohkon otsikko"
 
 msgid "plugins.blocks.mostRead.settings.saved"
 msgstr "Lisäosan asetukset tallennettu"
+
+msgid "plugins.blocks.mostRead.settings.mostReadDaysRequired"
+msgstr "Anna huomioitavien päivien määrä."
+
+msgid "plugins.blocks.mostRead.settings.count"
+msgstr "Artikkelien määrä"
+
+msgid "plugins.blocks.mostRead.settings.mostReadCountInvalid"
+msgstr "Anna kokonaisluku, joka on vähintään 1."

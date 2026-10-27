@@ -26,6 +26,10 @@
 			{fbvElement type="text" label="plugins.blocks.mostRead.settings.days" id="mostReadDays" value=$mostReadDays}
 		{/fbvFormSection}
 
+		{fbvFormSection for="mostReadCount"}
+			{fbvElement type="text" label="plugins.blocks.mostRead.settings.count" id="mostReadCount" value=$mostReadCount}
+		{/fbvFormSection}
+
 		{fbvFormSection for="mostReadBlockTitle"}
 			{fbvElement type="text" label="plugins.blocks.mostRead.settings.blockTitle" id="mostReadBlockTitle" value=$mostReadBlockTitle multilingual=true}
 		{/fbvFormSection}		
