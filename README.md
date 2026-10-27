@@ -1,4 +1,4 @@
-# Most Read Articles block plugin v. 3.4.0.0
+# Most Read Articles block plugin v. 3.5
 An Open Journal Systems plugin for adding a “most read articles” section to the frontend sidebar.
 
 ## Functionality
@@ -10,7 +10,8 @@ By default the plugin adds a new block to the sidebar displaying the 5 most view
 In the plugin settings the journal manager can add a custom block heading and choose a custom number of days for showing statistics.
 
 ## System requirements
-- OJS version 3.4
+- OJS version 3.5
 
 ## Contributions
 @zielaq
+@edersotto
